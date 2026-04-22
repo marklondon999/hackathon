@@ -105,14 +105,7 @@ print(table.head(10))
 # plt.legend(['Europe', 'America', 'EU', 'EU15', 'Other EU', 'Countries', 'World'])
 # plt.show()
 
-# Europe against EU
-# plt.plot(table.Date, table['EU15_norm'], color='green')
-# plt.plot(table.Date, table['Other EU_norm'], color='purple')
-# plt.title('Traffic Over Time', loc='left')
-# plt.ylabel('Traffic')
-# plt.xlabel('Date')
-# plt.legend([ 'EU15', 'Other EU'])
-# plt.show()
+
 
 #table.to_csv('data/merged_table.csv', index=False)
 
@@ -197,8 +190,34 @@ table_expenditure = normalisation(table_expenditure)
 # plt.show()
 
 
-plt.scatter(table['Other EU_norm'], table_expenditure['Other EU_norm'])
-plt.xlabel('Other EU')
-plt.ylabel('EU15')
-plt.title('Expenditure Relationship')
+
+all_data = pd.merge(table, table_expenditure, on='Date', how='inner')
+
+numbers = list(range(0, len(all_data)))
+all_data['colour'] = numbers
+
+print(all_data.head(10))
+
+
+
+ 
+# plt.scatter(all_data['Other EU_norm_x'], all_data['Other EU_norm_y'], c=all_data['colour'], cmap='viridis', s=100, edgecolors='k')
+# plt.xlabel('Other EU Traffic')
+# plt.ylabel('Other EU Expenditure')
+# plt.title('Expenditure Relationship')
+# plt.show()
+
+# #Other EU against EU
+# plt.plot(table.Date, table['Other EU_norm'], color='purple')
+# plt.title('Traffic Over Time', loc='left')
+# plt.ylabel('Traffic')
+# plt.xlabel('Date')
+# plt.legend(['Other EU'])
+# plt.show()
+
+fig, axs = plt.subplots(2)
+fig.suptitle('Vertically stacked subplots')
+axs[0].plot(table.Date, table['Other EU_norm'], color='purple')
+axs[0].plot(table.Date, table_expenditure['Other EU_norm'], color='green')
+axs[1].scatter(all_data['Other EU_norm_x'], all_data['Other EU_norm_y'], c=all_data['colour'], cmap='viridis', s=100, edgecolors='k')
 plt.show()
