@@ -220,4 +220,7 @@ fig.suptitle('Vertically stacked subplots')
 axs[0].plot(table.Date, table['Other EU_norm'], color='purple')
 axs[0].plot(table.Date, table_expenditure['Other EU_norm'], color='green')
 axs[1].scatter(all_data['Other EU_norm_x'], all_data['Other EU_norm_y'], c=all_data['colour'], cmap='viridis', s=100, edgecolors='k')
+
+plt.savefig("my_plot.png")
 plt.show()
+
