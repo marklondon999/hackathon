@@ -1,0 +1,10 @@
+import numpy as np
+
+ts = np.array([12, 15, 14, 20, 18, 25])
+
+min_val = ts.min()
+max_val = ts.max()
+
+scaled = (ts - min_val) / (max_val - min_val)
+print(scaled)
+ 

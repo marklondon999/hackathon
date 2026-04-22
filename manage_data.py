@@ -6,6 +6,10 @@
 
 # read data
 import pandas as pd
+import sktime as skpip
+import matplotlib.pyplot as plt 
+import numpy as np
+
 pd.set_option("display.max_columns", None)  # or 1000
 pd.set_option("display.max_rows", None)  # or 1000
 
@@ -30,14 +34,14 @@ for col in table1.columns:
         table1[col] = table1[col].astype(float) * 1000
 
 # Check the data
-print(table1.tail(10))
+
 
 
 # prepare the second table
 table2 = pd.read_csv('data/table12020on.csv', skiprows=7, header=1) # skip the first row as it is not needed
 table2.drop(table2.head(11).index,inplace = True)
 
-print(table2.columns)
+
 table2.drop(columns=['Percentage\r\nchange\r\n[note 1]', 'Unnamed: 9', 'Unnamed: 10'], inplace=True)
 table2.columns = table1.columns
 table2.dropna(how="all", inplace=True)
@@ -63,4 +67,53 @@ dates = pd.date_range(start='2009-01-01', end='2025-06-30', freq='QE')
 
 # Replace the Date with a time series sequence of step Quarterly
 table.Date = dates
+
+
+
+#create line chart
+# plt.plot(table.Date, table['America'], color='purple')
+# plt.title('America Traffic Over Time', loc='left')
+# plt.ylabel('America')
+# plt.xlabel('Date')
+# plt.show()
+
+
+
+# normalising the data to be between 0 and 1
+for col in table.columns:
+    if col != 'Date':
+        target_col = col + '_norm'
+        min_val = table[col].min()
+        max_val = table[col].max()
+        table[target_col] = (table[col] - min_val) / (max_val - min_val)
+        
 print(table.head(10))
+
+# # now display the normalised data       
+# plt.plot(table.Date, table['Europe_norm'], color='purple')
+# plt.plot(table.Date, table['America_norm'], color='red')
+# plt.plot(table.Date, table['EU_norm'], color='blue')
+# plt.plot(table.Date, table['EU15_norm'], color='green')
+# plt.plot(table.Date, table['Other EU_norm'], color='yellow')
+# plt.plot(table.Date, table['Countries_norm'], color='orange')
+# plt.plot(table.Date, table['World_norm'], color='black')
+# plt.title('Traffic Over Time', loc='left')
+# # plt.xlabel(table.Date.MonthLocator(interval=1))
+# # plt.xlabel(table.Date.DateFormatter('%Y-%b'))
+# plt.ylabel('Traffic')
+# plt.xlabel('Date')
+# plt.legend(['Europe', 'America', 'EU', 'EU15', 'Other EU', 'Countries', 'World'])
+# plt.show()
+
+# Europe against EU
+plt.plot(table.Date, table['EU15_norm'], color='green')
+plt.plot(table.Date, table['Other EU_norm'], color='purple')
+plt.title('Traffic Over Time', loc='left')
+# plt.xlabel(table.Date.MonthLocator(interval=1))
+# plt.xlabel(table.Date.DateFormatter('%Y-%b'))
+plt.ylabel('Traffic')
+plt.xlabel('Date')
+plt.legend([ 'EU15', 'Other EU'])
+plt.show()
+
+table.to_csv('data/merged_table.csv', index=False)
